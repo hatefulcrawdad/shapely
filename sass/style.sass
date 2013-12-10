@@ -1,0 +1,64 @@
+// CSS Shape UI Styles
+@mixin css-ui-base($width, $height, $bg, $radius: null)
+  background-color: $bg
+  display: block
+  height: $height
+  width: $width
+  @if $radius
+    border-radius: $radius
+
+@mixin css-ui-triangle-base($width, $height, $bg, $pos)
+  border: solid transparent
+  border-width: round($width) round($height)
+  @if $pos
+    border-#{$pos}-color: $bg
+
+@mixin css-ui($shape, $width, $height, $bg, $pos: null, $radius: null)
+
+  @if $shape == square
+    +css-ui-base($width, $height, $bg)
+
+  @else if $shape == round-square
+    +css-ui-base($width, $height, $bg, $radius)
+
+  @else if $shape == circle
+    +css-ui-base($width, $height, $bg, $width)
+
+  @else if $shape == pill
+    +css-ui-base($width, $height, $bg, $height)
+
+  @else if $shape == triangle
+    +css-ui-base(0, 0, transparent)
+    +css-ui-triangle-base($height, $width, $bg, $pos)
+
+  @else if $shape == diamond
+    margin-top: round($height / 2)
+    +css-ui-base(0, 0, transparent, null)
+    +css-ui-triangle-base($height / 2, $width / 2, $bg, top)
+    &:before
+      margin-top: round(-($height * 1.5))
+      margin-left: round(-($width / 2))
+      +css-ui-triangle-base($height / 2, $width / 2, $bg, bottom)
+      @extend %before-after-block
+
+%before-after-block
+  content: " "
+  display: block
+
+.circle
+  +css-ui(circle, 50px, 50px, pink)
+
+.square
+  +css-ui(square, 40px, 40px, orange)
+
+.round-square
+  +css-ui(round-square, 50px, 50px, blue, 10px)
+
+.pill
+  +css-ui(pill, 100px, 30px, purple)
+
+.triangle
+  +css-ui(triangle, 20px, 20px, black, top)
+
+.diamond
+  +css-ui(diamond, 70px, 40px, brown)
